@@ -75,6 +75,7 @@ class PreparationContext:
     def prepare_beverage(self, ingredients):
         return self._strategy.prepare(ingredients)
 
+
 if __name__ == "__main__":
     # Singleton: Один менеджер кав'ярні
     manager1 = CafeManager()
@@ -96,9 +97,11 @@ if __name__ == "__main__":
     order_subject.attach(barista)
     order_subject.notify("Нове замовлення: Капучино")
 
+
     # Strategy: Різні стратегії приготування напоїв
     context = PreparationContext(EspressoStrategy())
     print(context.prepare_beverage(["водою", "зернами кави"]))
 
     context.set_strategy(LatteStrategy())
     print(context.prepare_beverage(["молоком", "зернами кави"]))
+
