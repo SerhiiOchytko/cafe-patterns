@@ -32,6 +32,26 @@ class TeaCreator(BeverageCreator):
     def create_beverage(self):
         return Tea()
 
+# Observer: Оповіщення баристи про нові замовлення
+class OrderSubject:
+    def __init__(self):
+        self._observers = []
+
+    def attach(self, observer):
+        self._observers.append(observer)
+
+    def notify(self, message):
+        for observer in self._observers:
+            observer.update(message)
+
+class Barista:
+    def update(self, message):
+        raise NotImplementedError
+
+class ConcreteBarista(Barista):
+    def update(self, message):
+        print(f"Бариста отримав замовлення: {message}")
+
 if __name__ == "__main__":
     # Singleton: Один менеджер кав'ярні
     manager1 = CafeManager()
@@ -46,4 +66,10 @@ if __name__ == "__main__":
     tea_creator = TeaCreator()
     tea = tea_creator.create_beverage()
     print(tea.prepare())
+
+    # Observer: Оповіщення баристи про замовлення
+    order_subject = OrderSubject()
+    barista = ConcreteBarista()
+    order_subject.attach(barista)
+    order_subject.notify("Нове замовлення: Капучино")
 
