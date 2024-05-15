@@ -52,6 +52,30 @@ class ConcreteBarista(Barista):
     def update(self, message):
         print(f"Бариста отримав замовлення: {message}")
 
+# Strategy: Різні стратегії приготування напоїв
+class PreparationStrategy:
+    def prepare(self, ingredients):
+        raise NotImplementedError
+
+class EspressoStrategy(PreparationStrategy):
+    def prepare(self, ingredients):
+        return f"Приготування еспресо з {', '.join(ingredients)}"
+
+class LatteStrategy(PreparationStrategy):
+    def prepare(self, ingredients):
+        return f"Приготування латте з {', '.join(ingredients)}"
+
+class PreparationContext:
+    def __init__(self, strategy: PreparationStrategy):
+        self._strategy = strategy
+
+    def set_strategy(self, strategy: PreparationStrategy):
+        self._strategy = strategy
+
+    def prepare_beverage(self, ingredients):
+        return self._strategy.prepare(ingredients)
+
+
 if __name__ == "__main__":
     # Singleton: Один менеджер кав'ярні
     manager1 = CafeManager()
@@ -72,4 +96,12 @@ if __name__ == "__main__":
     barista = ConcreteBarista()
     order_subject.attach(barista)
     order_subject.notify("Нове замовлення: Капучино")
+
+
+    # Strategy: Різні стратегії приготування напоїв
+    context = PreparationContext(EspressoStrategy())
+    print(context.prepare_beverage(["водою", "зернами кави"]))
+
+    context.set_strategy(LatteStrategy())
+    print(context.prepare_beverage(["молоком", "зернами кави"]))
 
