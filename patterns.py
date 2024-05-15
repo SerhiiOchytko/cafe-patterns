@@ -75,6 +75,29 @@ class PreparationContext:
     def prepare_beverage(self, ingredients):
         return self._strategy.prepare(ingredients)
 
+# Decorator: Додавання інгредієнтів до напою
+class BeverageComponent:
+    def description(self):
+        raise NotImplementedError
+
+class SimpleCoffee(BeverageComponent):
+    def description(self):
+        return "Проста кава"
+
+class BeverageDecorator(BeverageComponent):
+    def __init__(self, component: BeverageComponent):
+        self._component = component
+
+    def description(self):
+        return self._component.description()
+
+class MilkDecorator(BeverageDecorator):
+    def description(self):
+        return f"{self._component.description()} + Молоко"
+
+class SugarDecorator(BeverageDecorator):
+    def description(self):
+        return f"{self._component.description()} + Цукор"
 
 if __name__ == "__main__":
     # Singleton: Один менеджер кав'ярні
@@ -97,7 +120,6 @@ if __name__ == "__main__":
     order_subject.attach(barista)
     order_subject.notify("Нове замовлення: Капучино")
 
-
     # Strategy: Різні стратегії приготування напоїв
     context = PreparationContext(EspressoStrategy())
     print(context.prepare_beverage(["водою", "зернами кави"]))
@@ -105,3 +127,8 @@ if __name__ == "__main__":
     context.set_strategy(LatteStrategy())
     print(context.prepare_beverage(["молоком", "зернами кави"]))
 
+    # Decorator: Додавання інгредієнтів до напою
+    simple_coffee = SimpleCoffee()
+    coffee_with_milk = MilkDecorator(simple_coffee)
+    coffee_with_milk_and_sugar = SugarDecorator(coffee_with_milk)
+    print(coffee_with_milk_and_sugar.description())
