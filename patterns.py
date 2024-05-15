@@ -72,3 +72,4 @@ if __name__ == "__main__":
     barista = ConcreteBarista()
     order_subject.attach(barista)
     order_subject.notify("Нове замовлення: Капучино")
+
